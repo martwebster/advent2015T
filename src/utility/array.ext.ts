@@ -58,22 +58,22 @@ declare global {
         /**
          * Return the max value in the array. This assumes that the array contains numbers
          */
-        max(): number
+        max(): number| undefined
 
         /**
          * Return the maximum value of an object in array. The passed in function returns the numeric attribute
          */
-        maxOf(attribute: (item: T) => number): number
+        maxOf(attribute: (item: T) => number): number|undefined
 
         /**
          * Return the minimum value in the array. This assumes that the array contains numbers
          */
-        min(): number
+        min(): number |undefined
 
         /**
          * Return the minimum value of an object in array. The passed in function returns the numeric attribute
          */
-        minOf(attribute: (item: T) => number): number
+        minOf(attribute: (item: T) => number): number|undefined
 
         /**
          * Remove an object from the specified index. A new array is returned
@@ -91,11 +91,6 @@ declare global {
          * @param callback
          */
         scan(callback: (item: T) => boolean): Array<Pos>
-
-        /**
-         *  Generates an array of positions, one for each row, column of a grid
-         */
-        scanAll(): Array<Pos>
 
         /**
          * Applies a default ascending sort on the array of numbers.
@@ -137,7 +132,7 @@ declare global {
         sumOf(attribute: (item: T) => number): number
 
         /**
-         * Swap Positions two elements in an array. This assumes a string[] or a two dimensional array
+         * Swap Positions two elements in an array. This assumes a string[] or a two-dimensional array
          */
         swapPositions(from: Pos, to: Pos): void
 
@@ -145,6 +140,11 @@ declare global {
          * Converts a string[] into an array of numbers
          */
         toNumbers(): Array<number>
+
+        /**
+         *  Generates an array of positions, one for each row, column of a grid
+         */
+        toPositions(): Array<Pos>
     }
 }
 
@@ -224,6 +224,9 @@ Array.prototype.last = function () {
 }
 
 Array.prototype.max = function () {
+    if (this.length==0){
+        return undefined;
+    }
     return Math.max(...this);
 }
 
@@ -232,6 +235,9 @@ Array.prototype.maxOf = function (attribute: (item: unknown) => number) {
 }
 
 Array.prototype.min = function () {
+    if (this.length==0){
+        return undefined;
+    }
     return Math.min(...this);
 }
 
@@ -264,50 +270,26 @@ Array.prototype.scan = function (callback: (item: any) => boolean): Array<Pos> {
                 }
             }
         }
-        if (this[y] instanceof Array) {
-            const ar = this[y] as Array<unknown>
-            for (let x = 0; x < ar.length; x++) {
-                if (callback(ar[x])) {
-                    positions.push({
-                        x,
-                        y
-                    })
-                }
-            }
-        }
-    }
-    return positions;
-}
-
-Array.prototype.scanAll = function () {
-    const positions: Pos[] = []
-    for (let y = 0; y < this.length; y++) {
-        if (typeof this[y] === 'string') {
-            const element = this[y] as string;
-            for (let x = 0; x < element.length; x++) {
-                positions.push({
-                    x,
-                    y
-                })
-            }
-        } else if (Array.isArray(this[y])) {
-            const element = this[y] as Array<any>;
-            for (let x = 0; x < element.length; x++) {
-                positions.push({
-                    x,
-                    y
-                })
-            }
-        }
     }
     return positions;
 }
 
 Array.prototype.sortAscending = function () {
-    return this.sort((a, b) => a - b)
+
+    return this.sort((a, b) => {
+        if (typeof a === "string") {
+            return (a as string).localeCompare(b as string);
+        }
+        return a - b
+    })
 };
 Array.prototype.sortDescending = function () {
-    return this.sort((a, b) => b - a)
+    return this.sort((a, b) => {
+        if (typeof a === "string") {
+            return (b as string).localeCompare(a as string);
+        }
+        return b - a
+    })
 };
 
 Array.prototype.split = function (item: unknown): Array<Array<unknown>> {
@@ -357,4 +339,27 @@ Array.prototype.swapPositions = function (from: Pos, to: Pos): void {
 
 Array.prototype.toNumbers = function (): number[] {
     return this.map(it => Number(it));
+}
+Array.prototype.toPositions = function () {
+    const positions: Pos[] = []
+    for (let y = 0; y < this.length; y++) {
+        if (typeof this[y] === 'string') {
+            const element = this[y] as string;
+            for (let x = 0; x < element.length; x++) {
+                positions.push({
+                    x,
+                    y
+                })
+            }
+        } else if (Array.isArray(this[y])) {
+            const element = this[y] as Array<any>;
+            for (let x = 0; x < element.length; x++) {
+                positions.push({
+                    x,
+                    y
+                })
+            }
+        }
+    }
+    return positions;
 }

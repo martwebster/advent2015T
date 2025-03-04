@@ -10,8 +10,8 @@ The template provides:
 - Typescript extensions for String, and Arrays for the type of processing required in AOC.
 
 Each day folder contains 3 files:
-- dayx.test.ts: contains the unit tests
-- dayx.ts: contains the solution
+- day8.test.ts: contains the unit tests
+- day8.ts: contains the solution
 - dayx.txt: contains the sample data
 
 # Usage Codespaces (Easy)
