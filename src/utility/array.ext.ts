@@ -1,3 +1,5 @@
+import {Option} from "../day17/day17";
+
 export {};
 
 declare global {
@@ -85,6 +87,12 @@ declare global {
          * Remove any duplicates from the array. Returns a new array de-duped
          */
         removeDuplicates(): Array<T>
+
+        /**
+         * Remove any duplicates from the array. Returns a new array de-duped
+         * @param hashGen : Function used to generate a unique hash for the item in the array
+         */
+        removeDuplicateItems(hashGen: (item: T) => string): Array<T>
 
         /**
          * Generates an array of positions that pass the check in the called in function
@@ -254,6 +262,19 @@ Array.prototype.removeDuplicates = function (): Array<unknown> {
     const set = new Set<any>();
     this.forEach(it => set.add(it));
     return Array.from(set)
+}
+
+Array.prototype.removeDuplicateItems = function (hashGen: (item: any) => string): Array<unknown> {
+    const result : any[] = [];
+    const hashedResults : String[] = [];
+    this.forEach(item => {
+        const itemHash =  hashGen(item)
+        if (!hashedResults.includes(itemHash)){
+            result.push(item)
+            hashedResults.push(itemHash);
+        }
+    })
+    return result
 }
 
 Array.prototype.scan = function (callback: (item: any) => boolean): Array<Pos> {
