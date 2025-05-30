@@ -24,7 +24,7 @@ export namespace Position {
       return positions.filter(it => it.x == pos.x && it.y == pos.y)
    }
 
-   export const adjacent = (pos : Pos, diag: boolean): Pos[] =>{
+   export const adjacent = (pos : Pos, diag: boolean): Pos[] => {
       const adjacent: Pos[] = []
       adjacent.push(Position.left(pos));
       adjacent.push(Position.right(pos));
@@ -38,13 +38,6 @@ export namespace Position {
       }
       return adjacent
    }
-   export const Zero : Pos = { x: 0, y: 0 }
-
-   export const adjacentInGrid =
-       (pos: Pos, diag:  boolean, max: Pos): Pos[] =>{
-      return Position.adjacent(pos, diag)
-          .filter( it => it.x >=0 && it.x <= max.x && it.y >=0 && it.y <= max.y)
-       }
 }
 
 
