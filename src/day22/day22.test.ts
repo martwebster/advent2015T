@@ -76,11 +76,5 @@ describe(`day ${dayNumber}`, () => {
             }
             playerTurn = !playerTurn
         }
-    })
-
-    test('part1', () => {
-        const data = readTestData(`./src/day${dayNumber}/input.txt`);
-        const sum = data.map(line => exampleFunction(line)).sum();
-        expect(sum).toBe(6);
-    })
+    });
 })
